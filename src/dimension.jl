@@ -19,6 +19,10 @@ function Base.setindex!(self::MDH, v, m, d, h)
     self.c[m, d, h] = v
 end
 
+function Base.sum(self::MDH)
+    sum(skipmissing(self.c))
+end
+
 struct MH
     c::Array{Union{Missing, Float32}, 2} 
     MH() = new(Array{Union{Missing, Float32}, 2}(missing, M, H))
