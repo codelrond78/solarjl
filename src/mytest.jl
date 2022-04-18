@@ -1,5 +1,4 @@
-include("./MyMod.jl")
-using .MyMod
+include("./myf.jl")
 using Test
 
 @testset "first tests ;)" begin    

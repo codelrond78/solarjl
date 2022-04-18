@@ -1,7 +1,3 @@
-module MyMod
-
-export get_perfil_personalizado
-    
 function get_auxM(perfil_consumo_anual::Int64, perfil_consumo_diario::Int64, consumo_anual::Float64)
     zeros(12)
 end
@@ -24,6 +20,4 @@ function get_perfil_personalizado(perfil_consumo_anual::Int64, perfil_consumo_di
     map(zip(auxH, auxM)) do (h, m)
         1000.0h*m
     end
-end
-
 end
