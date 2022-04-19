@@ -1,4 +1,6 @@
 using Genie, Genie.Router, Genie.Requests, Genie.Renderer.Json
+include("load_data.jl")
+include("calculate.jl")
 
 Genie.config.cors_headers["Access-Control-Allow-Origin"] = "http://localhost:3001"
 Genie.config.cors_headers["Access-Control-Allow-Headers"] = "Content-Type"
@@ -9,15 +11,23 @@ struct myData
     x
 end
 
-route("/jsonpayload", method = POST) do
-  @show jsonpayload()
-  @show rawpayload()
+function main()
+    w = load_data()
 
-  println(typeof(jsonpayload()["a"]))
+    route("/jsonpayload", method = POST) do
+        @show jsonpayload()
+        @show rawpayload()
+        
+        calculate(w)
+        
+        #println(typeof(jsonpayload()["a"]))
+        
+        json(myData(5))
+    end
 
-  json(myData(5))
+    print("listening at 0.0.0.0:8000")
+    up(8000, "0.0.0.0", async = false)
 end
 
-print("empezamos")
+main()
 
-up(8000, "0.0.0.0", async = false)
