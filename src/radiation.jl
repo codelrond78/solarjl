@@ -1,6 +1,6 @@
 module radiation
 
-export get_radiation, time_pos
+export get_radiation, time_pos, Output, radiation_mx
 
 using Genie, Genie.Router, Genie.Requests, Genie.Renderer.Json
 using HTTP
@@ -30,6 +30,15 @@ end
 
 function time_pos(s::String)
     parse(Int64, split(s, ":")[1])
+end
+
+function radiation_mx(rr::Output; d::Int64=12, h::Int64=24)
+    output = zeros(d, h)
+    for r in rr.daily_profile
+        pos = time_pos(r["time"])
+        output[pos + 1, r["month"]] = r["G(i)"]
+    end
+    output
 end
 
 end
