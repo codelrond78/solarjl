@@ -1,18 +1,23 @@
+module radiation
+
+export get_radiation
+
 using Genie, Genie.Router, Genie.Requests, Genie.Renderer.Json
 using HTTP
-using JSON
+using JSON3
+using StructTypes
 
-function radiation(latitude::Float64, longitude::Float64)
-    println("previo request")
-    x = HTTP.request("GET", "http://localhost:3000/posts")
-    println("x")
-    body = String(x.body)
-    println("body")
-    JSON.parse(body)
+struct Radiation
+    a::Float64 
 end
 
-println("empezamos")
-response = radiation(0.0, 0.0)
-println("response")
-x = get(response[1], "a", missing)
-println(x, typeof(x))
+StructTypes.StructType(::Type{Radiation}) = StructTypes.Struct()
+
+function get_radiation(latitude::Float64, longitude::Float64)
+    x = HTTP.request("GET", "http://localhost:3000/posts")
+    body = String(x.body)
+    #JSON.parse(body)
+    JSON3.read(body, Radiation)
+end
+
+end

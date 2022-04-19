@@ -2,6 +2,7 @@ using Genie, Genie.Router, Genie.Requests, Genie.Renderer.Json
 include("load_data.jl")
 include("user_input.jl")
 using .user
+include("radiation.jl")
 include("calculate.jl")
 
 Genie.config.cors_headers["Access-Control-Allow-Origin"] = "http://localhost:3001"
