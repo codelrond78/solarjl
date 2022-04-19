@@ -4,3 +4,7 @@ content-type: application/json
 {
     "a": 0.3
 }
+
+###
+
+GET https://re.jrc.ec.europa.eu/api/DRcalc?lat=37.98704&lon=-1.13004&raddatabase=PVGIS-SARAH&angle=30.0&aspect=30.0&outputformat=json&userhorizon=&usehorizon=1&js=1&select_database_daily=PVGIS-SARAH&month=1&localtime=1&global=1&clearsky=1&dangle=30.0&daspect=30.0&glob_2axis=1 HTTP/1.1
