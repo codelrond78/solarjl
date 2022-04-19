@@ -1,4 +1,6 @@
-@enum TIPO_CONSUMO TIPO_CONSUMO_IGUAL=1 TIPO_CONSUMO_NOCHE
+using DelimitedFiles
+
+@enum TIPO_CONSUMO TIPO_CONSUMO_IGUAL=1 TIPO_CONSUMO_NOCHE TIPO_CONSUMO_INVIERNO
 
 function extend_from_H_to_M(x::AbstractArray{Float64, 1})
     repeat(x, 12)
@@ -8,20 +10,45 @@ function extend_from_M_to_H(x::AbstractArray{Float64, 1})
     repeat(x', 1, 24)
 end
 
-function get_auxM(perfil_consumo_anual::Int64, perfil_consumo_diario::Int64, consumo_anual::Float64)
-    zeros(12)
+function get_distribucion_equitativa(consumo_anual::Float64)
+    map(days_month) do (k) 
+        consumo_anual/(366.0*k)
+    end
+end
+
+function get_factor_verano()
+    readdlm("src/verano.csv", ',', Float64)
+end
+
+function get_factor_invierno()
+    readdlm("src/invierno.csv", ',', Float64)
+end
+
+function get_auxM(perfil_consumo_anual::Int64, consumo_anual::Float64)
+    distribucion_equitativa = get_distribucion_equitativa(consumo_anual)
+    factor_verano = get_factor_verano()
+    factor_invierno = get_factor_invierno()
+    map(distribucion_equitativa, factor_verano, factor_invierno) do (e, v, i)
+        if perfil_consumo_anual == TIPO_CONSUMO_IGUAL
+            e
+        elseif perfil_consumo_anual == TIPO_CONSUMO_INVIERNO
+            e*i
+        else
+            e*v
+        end
+    end
 end
 
 function get_equitativo_H()
-    zeros(24)
+    readdlm("src/data.csv", ',', Float64)
 end
 
 function get_factor_noche()
-    zeros(24)
+    readdlm("src/data.csv", ',', Float64)
 end
 
 function get_factor_tarde()
-    zeros(24)
+    readdlm("src/data.csv", ',', Float64)
 end
 
 function get_aux_H(perfil_consumo_diario::Int64)
@@ -46,7 +73,7 @@ end
 
 function get_perfil_personalizado(perfil_consumo_anual::Int64, perfil_consumo_diario::Int64, consumo_anual::Float64)
     auxH = get_aux_H(perfil_consumo_diario)
-    auxM = get_auxM(perfil_consumo_anual, perfil_consumo_diario, consumo_anual)
+    auxM = get_auxM(perfil_consumo_anual, consumo_anual)
 
     auxH = extend_from_H_to_M(auxH)
     auxM = extend_from_M_to_H(auxM)
