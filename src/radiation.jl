@@ -1,6 +1,6 @@
 module radiation
 
-export get_radiation
+export get_radiation, time_pos
 
 using Genie, Genie.Router, Genie.Requests, Genie.Renderer.Json
 using HTTP
@@ -26,6 +26,10 @@ function get_radiation(latitude::Float64, longitude::Float64, angle::Float64, az
     y = JSON3.read(body, Radiation)
     println(y.outputs.daily_profile)
     y
+end
+
+function time_pos(s::String)
+    parse(Int64, split(s, ":")[1])
 end
 
 end
