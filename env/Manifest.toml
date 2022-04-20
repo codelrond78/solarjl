@@ -73,6 +73,11 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 deps = ["ArgTools", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 
+[[deps.Exceptions]]
+git-tree-sha1 = "7340a0af92bb7dfb63c8617f86a0045373ef2ea0"
+uuid = "25a0344a-2aab-46d0-b534-6f1410d4c65f"
+version = "0.1.2"
+
 [[deps.EzXML]]
 deps = ["Printf", "XML2_jll"]
 git-tree-sha1 = "0fa3b52a04a4e210aeb1626def9c90df3ae65268"
