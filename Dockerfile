@@ -1,5 +1,6 @@
-FROM julia:1.8.0-beta3-alpine
+FROM julia:1.7.2-bullseye
 
 COPY . .
 
+RUN julia --project=env -e 'using Pkg; Pkg.instantiate()'
 CMD julia --project=env src/app.jl
