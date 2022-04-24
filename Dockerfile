@@ -1,7 +1,5 @@
-FROM julia:1.7.2-buster
+FROM julia:1.8.0-beta3-bullseye
 
-COPY . .
-#
-
-RUN julia --project=env -e 'using Pkg; Pkg.instantiate()'
-CMD julia --project=env src/app.jl
+RUN yes | apt update
+RUN yes | apt upgrade
+RUN yes | apt install git
