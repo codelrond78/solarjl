@@ -7,10 +7,10 @@ include("radiation.jl")
 include("calculate.jl")
 =#
 
-Genie.config.cors_headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+Genie.config.cors_headers["Access-Control-Allow-Origin"] = "*" #"https://hoppscotch.io" #"http://localhost:3000"
 Genie.config.cors_headers["Access-Control-Allow-Headers"] = "Content-Type"
 Genie.config.cors_headers["Access-Control-Allow-Methods"] ="GET,POST,PUT,DELETE,OPTIONS" 
-Genie.config.cors_allowed_origins = ["*"]
+#Genie.config.cors_allowed_origins = ["*"]
 
 function main()
     #w = load_data()
