@@ -30,8 +30,9 @@ function main()
         json(Dict("success" => ";-   hi GET"))       
     end
 
-    print("listening at 0.0.0.0:8080")
-    up(8000, "0.0.0.0", async = false)
+    PORT = ENV["PORT"]
+    print("listening at 0.0.0.0:$(PORT)")
+    up(parse(Int64, PORT), "0.0.0.0", async = false)
 end
 
 main()
