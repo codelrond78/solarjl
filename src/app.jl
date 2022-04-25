@@ -26,7 +26,11 @@ function main()
         end        
     end
 
-    print("listening at 0.0.0.0:8000")
+    route("/", method = GET) do
+        json(Dict("success" => ";-   hi GET"))       
+    end
+
+    print("listening at 0.0.0.0:8080")
     up(8000, "0.0.0.0", async = false)
 end
 
