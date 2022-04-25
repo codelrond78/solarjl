@@ -1,0 +1,7 @@
+FROM julia:1.8.0-beta3-bullseye
+
+COPY . .
+#
+
+RUN julia --project=beta -e 'using Pkg; Pkg.instantiate()'
+CMD julia --project=beta src/app.jl

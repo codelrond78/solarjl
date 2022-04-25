@@ -20,7 +20,7 @@ function main()
             #user_input = get_user_input(String(rawpayload()))
             #result = calculate(w, user_input)        
             #json(result)
-            json(Dict("success" => ";-"))
+            json(Dict("success" => ";-   hi"))
         catch e
             json(Dict("error" => String(e)))
         end        
