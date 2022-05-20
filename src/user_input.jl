@@ -70,25 +70,25 @@ function validate(input::UserInput)
 
     if isnothing(input.typedayconsume)
         push!(response, "typedayconsume: missing")
-    elseif !isinteger(input.typedayconsume) || !(1 <= input.typedayconsume <= 3)
+    elseif !(isa(input.yearconsume, Number) && isinteger(input.typedayconsume) && (1 <= input.typedayconsume <= 3))
         push!(response, "typedayconsume: must be typedayconsume in [1, 2, 3]")
     end
 
     if isnothing(input.typeyearconsume)
         push!(response, "typeyearconsume: missing")
-    elseif !isinteger(input.typeyearconsume) || !(1 <= input.typeyearconsume <= 3)
+    elseif !(isa(input.yearconsume, Number) && isinteger(input.typeyearconsume) && (1 <= input.typeyearconsume <= 3))
         push!(response, "typeyearconsume: must be typeyearconsume in [1, 2, 3]")
     end
 
     if isnothing(input.numpanels)
         push!(response, "numpanels: missing")
-    elseif !isinteger(input.numpanels) || input.numpanels < 0
+    elseif !(isa(input.yearconsume, Number) && isinteger(input.numpanels) && input.numpanels >= 0)
         push!(response, "numpanels: must be numpanels >= 0")
     end
 
     if isnothing(input.bonopercentage)
         push!(response, "bonopercentage: missing")
-    elseif !isinteger(input.bonopercentage) || !(0 <= input.bonopercentage <= 1)
+    elseif !(isa(input.yearconsume, Number) && isinteger(input.bonopercentage) && (0 <= input.bonopercentage <= 1))
         push!(response, "bonopercentage: must be bonopercentage in [0, 1]")
     end
 
