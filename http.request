@@ -1,4 +1,4 @@
-POST http://localhost:8000/jsonpayload HTTP/1.1
+POST https://solarjl-prod-solar-sbe3e5.mo1.mogenius.io/jsonpayload HTTP/1.1
 content-type: application/json
 
 {
