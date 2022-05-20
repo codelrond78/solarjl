@@ -10,7 +10,9 @@ mutable struct InputErrors <: Exception
     msg: [String]
 end
 
-struct UserInput
+const CSVL = 8040
+
+mutable struct UserInput
    deep
    width
    yearconsume
@@ -22,7 +24,6 @@ struct UserInput
    ree
    rented
    socialb
-
    power
    powerrentedvalle
    fixedrate
@@ -54,18 +55,24 @@ function validate(input::UserInput)
         push!(response, "deep: missing")
     elseif !isa(input.deep, Number) || input.deep < 0.0 
         push!(response, "deep: must be 0.0 < deep")
+    else
+        input.deep = Float64(input.deep)
     end
 
     if isnothing(input.width)
         push!(response, "width: missing")
     elseif !isa(input.width, Number) || input.width < 0.0
         push!(response, "width: must be 0.0 < width")
+    else
+        input.width = Float64(input.width)
     end
 
     if isnothing(input.yearconsume)
         push!(response, "yearconsume: missing")
     elseif !isa(input.yearconsume, Number) || input.yearconsume < 0
         push!(response, "yearconsume: must be yearconsume >= 0")
+    else
+        input.yearconsume = Float64(input.yearconsume)
     end
 
     if isnothing(input.typedayconsume)
@@ -94,18 +101,50 @@ function validate(input::UserInput)
 
     if isnothing(input.usecsv)
         push!(response, "usecsv: missing")
+    else
+        input.usecsv = Bool(input.usecsv)
+    end
+
+    if input.usecsv
+        if isnothing(input.csv)
+            push!(response, "usecsv and csv: missing")
+        else
+            try
+                csv = reduce(vcat,transpose.(input.csv))
+                t = size(csv)
+                if t != (CSVL, 2)
+                    push!(response, "csv length expected, ($(CSVL), 2), received $(t)")    
+                else
+                    input.csv = csv    
+                end
+            catch e
+                push!(response, "parsing error on input.csv")    
+            end
+        end
     end
 
     if isnothing(input.ree)
         push!(response, "ree: missing")
+    elseif !isa(input.ree, Bool)
+        push!(response, "ree: ree is not boolean")
+    else
+        input.ree = Bool(input.ree)
     end
 
     if isnothing(input.rented)
         push!(response, "rented: missing")
+    elseif !isa(input.rented, Bool)
+        push!(response, "rented: rented is not boolean")
+    else
+        input.rented = Bool(input.rented)
     end
 
     if isnothing(input.socialb)
         push!(response, "socialb: missing")
+    elseif !isa(input.socialb, Bool)
+        push!(response, "socialb: socialb is not boolean")
+    else
+        input.socialb = Bool(input.socialb)
     end
 
     if isnothing(input.power )
@@ -195,6 +234,8 @@ function validate(input::UserInput)
     if length(response) != 0 
         throw(InputErrors(response))
     end
+
+    return userinput
 end
 
 end  
