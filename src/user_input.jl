@@ -7,7 +7,7 @@ using StructTypes
 using Exceptions
 
 mutable struct InputErrors <: Exception
-    msg: [String]
+    msg
 end
 
 const CSVL = 8040
@@ -44,19 +44,19 @@ StructTypes.StructType(::Type{UserInput}) = StructTypes.Struct()
 
 function get_user_input(payload::String)
     ui = JSON3.read(payload, UserInput)
-    validate_all(ui)  
+    validate!_all(ui)  
     ui
 end
 
-function validate_input(obj)
-    function validate(attr, pipe, type)
-        errors = []
-        x = getfield(obj, attr)
+function validate_input(obj, errors)
+    function validate!(attr, pipe, type)
+        attr_s = Symbol(attr)
+        x = getfield(obj, attr_s)
         for f in pipe
             f(x, attr, errors)
         end
         if length(errors) == 0
-            setfield!(obj, attr, type(x))
+            setfield!(obj, attr_s, type(x))
         end
     end
 end
@@ -94,17 +94,17 @@ function boolean(x, attr, errors)
 end
 
 function validate_all(input::UserInput)
-    response = []
-
-    validate = validate_input(input)
-    validate("deep", [required, positive], Float64)
-    validate("width", [required, positive], Float64)
-    validate("yearconsume", [required, positive], Float64)
-    validate("typedayconsume", [required, any_of(1, 2, 3)], Int64)
-    validate("typeyearconsume", [required, any_of(1, 2, 3)], Int64)
-    validate("typeyearconsume", [required, integer, positive], Int64)
-    validate("bonopercentage", [required, any_of(0, 1)], Int64)
-    validate("usecsv", [required, boolean], Bool)
+    
+    errors = []
+    validate! = validate_input(input, errors)
+    validate!("deep", [required, positive], Float64)
+    validate!("width", [required, positive], Float64)
+    validate!("yearconsume", [required, positive], Float64)
+    validate!("typedayconsume", [required, any_of(1, 2, 3)], Int64)
+    validate!("typeyearconsume", [required, any_of(1, 2, 3)], Int64)
+    validate!("typeyearconsume", [required, integer, positive], Int64)
+    validate!("bonopercentage", [required, any_of(0, 1)], Int64)
+    validate!("usecsv", [required, boolean], Bool)
 
     if input.usecsv
         if isnothing(input.csv)
@@ -124,25 +124,25 @@ function validate_all(input::UserInput)
         end
     end
 
-    validate("ree", [required, boolean], Bool)
-    validate("rented", [required, boolean], Bool)
-    validate("socialb", [required, boolean], Bool)
-    validate("power", [required, positive], Float64)
-    validate("powerrentedvalle", [required, positive], Float64)
-    validate("fixedrate", [required, positive], Float64)
-    validate("fixedvalle", [required, positive], Float64)
-    validate("vallerate", [required, positive], Float64)
-    validate("vallellano", [required, positive], Float64)
-    validate("picorate", [required, positive], Float64)
-    validate("otherconcepts", [required, positive], Float64)
-    validate("panelpower", [required, positive], Float64)
-    validate("batterycapacity", [required, positive], Float64)
-    validate("inversorpower", [required, positive], Float64)
-    validate("carannualkm", [required, positive], Float64)
-    validate("electriccarpower", [required, positive], Float64)
-    validate("carefficiency", [required, positive], Float64)
+    validate!("ree", [required, boolean], Bool)
+    validate!("rented", [required, boolean], Bool)
+    validate!("socialb", [required, boolean], Bool)
+    validate!("power", [required, positive], Float64)
+    validate!("powerrentedvalle", [required, positive], Float64)
+    validate!("fixedrate", [required, positive], Float64)
+    validate!("fixedvalle", [required, positive], Float64)
+    validate!("vallerate", [required, positive], Float64)
+    validate!("vallellano", [required, positive], Float64)
+    validate!("picorate", [required, positive], Float64)
+    validate!("otherconcepts", [required, positive], Float64)
+    validate!("panelpower", [required, positive], Float64)
+    validate!("batterycapacity", [required, positive], Float64)
+    validate!("inversorpower", [required, positive], Float64)
+    validate!("carannualkm", [required, positive], Float64)
+    validate!("electriccarpower", [required, positive], Float64)
+    validate!("carefficiency", [required, positive], Float64)
 
-    if length(response) != 0 
+    if length(errors) != 0 
         throw(InputErrors(response))
     end
 

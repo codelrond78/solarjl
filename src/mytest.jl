@@ -4,6 +4,12 @@ using Test
 using .radiation
 using .user
 
+mutable struct Abc
+    a
+    b
+    c
+end
+
 function run()
     @testset "time pos" begin    
         @test time_pos("00:00") == 0
@@ -19,11 +25,23 @@ function run()
         @test radiation_mx(output; d=2, h=2) == [5.3 0.0; 0.0 0.0]
     end;
 
+    #=
     @testset "validate user input" begin    
         datajson = """{"angle": 0.0, "azimut": 0.0}""" 
         @test_throws MissingInput get_user_input(datajson)
         datajson = """{"angle": 0.0, "azimut": 0.0, "yearconsume": 0.0, "typedayconsume": 0, "typeyearconsume": 0, "numpanels": -1, "bonopercentage": 0}""" 
         @test_throws DomainErrorInput get_user_input(datajson)
     end;
+    =#
+
+    @testset "validate user input" begin
+        input = Abc(nothing, nothing, nothing)
+        errors = []    
+        validate! = user.validate_input(input, errors)
+        validate!("a", [user.required, user.positive], Float64)
+        @test errors == ["a: missing", "a: must be >= 0"]
+    end;
+
 end
 
+run()
