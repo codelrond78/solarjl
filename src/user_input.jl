@@ -1,6 +1,7 @@
 module user
 
-export get_user_input, UserInput, MissingInput, DomainErrorInput
+export get_user_input, UserInput, MissingInput, DomainErrorInput, validate_input, 
+       required, positive, anyof,integer
 
 using JSON3
 using StructTypes

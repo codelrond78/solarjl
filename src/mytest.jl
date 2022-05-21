@@ -37,8 +37,8 @@ function run()
     @testset "validate user input" begin
         input = Abc(nothing, nothing, nothing)
         errors = []    
-        validate! = user.validate_input(input, errors)
-        validate!("a", [user.required, user.positive], Float64)
+        validate! = validate_input(input, errors)
+        validate!("a", [required, positive], Float64)
         @test errors == ["a: missing", "a: must be >= 0"]
     end;
 
