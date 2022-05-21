@@ -103,7 +103,7 @@ function validate_all(input::UserInput)
     validate!("radiation", [required])
 
     try
-        radiation = reduce(vcat,transpose.(input.radiation))
+        radiation::AbstractArray{Float64, 2} = reduce(vcat,transpose.(input.radiation))
         t = size(radiation)
         if t != (24, 12)
             push!(response, "csv length expected, (24, 12), received $(t)")    
@@ -126,7 +126,7 @@ function validate_all(input::UserInput)
             push!(response, "usecsv and csv: missing")
         else
             try
-                csv = reduce(vcat,transpose.(input.csv))
+                csv::AbstractArray{Float64, 2} = reduce(vcat,transpose.(input.csv))
                 t = size(csv)
                 if t != (CSVL, 2)
                     push!(response, "csv length expected, ($(CSVL), 2), received $(t)")    
