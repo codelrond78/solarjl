@@ -14,6 +14,7 @@ end
 const CSVL = 8040
 
 mutable struct UserInput
+   radiation
    deep
    width
    yearconsume
@@ -98,6 +99,19 @@ function validate_all(input::UserInput)
     
     errors = []
     validate! = validate_input(input, errors)
+    
+    validate!("radiation", [required])
+
+    try
+        radiation = reduce(vcat,transpose.(input.radiation))
+        t = size(radiation)
+        if t != (24, 12)
+            push!(response, "csv length expected, (24, 12), received $(t)")    
+        end
+    catch
+        push!(response, "parsing error on radiation")    
+    end
+    
     validate!("deep", [required, positive], Float64)
     validate!("width", [required, positive], Float64)
     validate!("yearconsume", [required, positive], Float64)
@@ -119,8 +133,8 @@ function validate_all(input::UserInput)
                 else
                     input.csv = csv    
                 end
-            catch e
-                push!(response, "parsing error on input.csv")    
+            catch
+                push!(response, "parsing error on csv")    
             end
         end
     end
