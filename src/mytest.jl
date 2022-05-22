@@ -48,7 +48,27 @@ function run()
         radiation = JSON3.read("[[1, 2, 3], [4, 5, 6]]")
         r = validate_radiation!(radiation, errors, (2, 3))
         @test r == [1 2 3; 4 5 6]
-        #@test errors == ["a: missing", "a: must be >= 0"]
+    end;
+
+    @testset "validate user input radiation fail parsing" begin
+        errors = []    
+        radiation = JSON3.read("[[1, 2, 3], [4, 5, \"6\"]]")
+        validate_radiation!(radiation, errors, (2, 3))
+        @test errors == ["parsing error on radiation"]
+    end;
+
+    @testset "validate user input radiation fail parsing different row size" begin
+        errors = []    
+        radiation = JSON3.read("[[1, 2, 3], [4, 5]]")
+        validate_radiation!(radiation, errors, (2, 3))
+        @test errors == ["parsing error on radiation"]
+    end;
+
+    @testset "validate user input radiation fail size" begin
+        errors = []    
+        radiation = JSON3.read("[[1, 2, 3]]")
+        validate_radiation!(radiation, errors, (2, 3))
+        @test errors == ["radiation size error, expected (2, 3), received (1, 3)"]
     end;
 
 end

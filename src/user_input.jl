@@ -100,7 +100,7 @@ function validate_radiation!(radiation, errors, rsize)
         r::AbstractArray{Float64, 2} = reduce(vcat,transpose.(radiation))
         t = size(r)
         if t != rsize
-            push!(errors, "csv length expected, $(rsize), received $(t)")    
+            push!(errors, "radiation size error, expected $(rsize), received $(t)")    
         end
         r
     catch
