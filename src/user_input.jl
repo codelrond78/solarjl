@@ -1,7 +1,7 @@
 module user
 
 export get_user_input, UserInput, MissingInput, DomainErrorInput, validate_input, 
-       required, positive, anyof,integer
+       required, positive, anyof,integer, validate_radiation!
 
 using JSON3
 using StructTypes
@@ -95,23 +95,30 @@ function boolean(x, attr, errors)
     end
 end
 
+function validate_radiation!(radiation, errors, rsize)
+    try
+        r::AbstractArray{Float64, 2} = reduce(vcat,transpose.(radiation))
+        t = size(r)
+        if t != rsize
+            push!(errors, "csv length expected, $(rsize), received $(t)")    
+        end
+        r
+    catch
+        push!(errors, "parsing error on radiation")
+        nothing    
+    end
+end
+
 function validate_all(input::UserInput)
     
     errors = []
     validate! = validate_input(input, errors)
     
     validate!("radiation", [required])
-
-    try
-        radiation::AbstractArray{Float64, 2} = reduce(vcat,transpose.(input.radiation))
-        t = size(radiation)
-        if t != (24, 12)
-            push!(response, "csv length expected, (24, 12), received $(t)")    
-        end
-    catch
-        push!(response, "parsing error on radiation")    
+    r = validate_radiation!(input.radiation, errors, (24, 12))
+    if r 
+        input.radiation = r
     end
-    
     validate!("deep", [required, positive], Float64)
     validate!("width", [required, positive], Float64)
     validate!("yearconsume", [required, positive], Float64)
@@ -123,18 +130,18 @@ function validate_all(input::UserInput)
 
     if input.usecsv
         if isnothing(input.csv)
-            push!(response, "usecsv and csv: missing")
+            push!(errors, "usecsv and csv: missing")
         else
             try
                 csv::AbstractArray{Float64, 2} = reduce(vcat,transpose.(input.csv))
                 t = size(csv)
                 if t != (CSVL, 2)
-                    push!(response, "csv length expected, ($(CSVL), 2), received $(t)")    
+                    push!(errors, "csv length expected, ($(CSVL), 2), received $(t)")    
                 else
                     input.csv = csv    
                 end
             catch
-                push!(response, "parsing error on csv")    
+                push!(errors, "parsing error on csv")    
             end
         end
     end

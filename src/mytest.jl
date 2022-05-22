@@ -1,6 +1,7 @@
 include("./user_input.jl")
 include("./radiation.jl")
 using Test
+using JSON3
 using .radiation
 using .user
 
@@ -40,6 +41,14 @@ function run()
         validate! = validate_input(input, errors)
         validate!("a", [required, positive], Float64)
         @test errors == ["a: missing", "a: must be >= 0"]
+    end;
+
+    @testset "validate user input radiation" begin
+        errors = []    
+        radiation = JSON3.read("[[1, 2, 3], [4, 5, 6]]")
+        r = validate_radiation!(radiation, errors, (2, 3))
+        @test r == [1 2 3; 4 5 6]
+        #@test errors == ["a: missing", "a: must be >= 0"]
     end;
 
 end
