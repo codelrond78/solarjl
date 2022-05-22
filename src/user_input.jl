@@ -136,7 +136,7 @@ function validate_all(input::UserInput)
                 csv::AbstractArray{Float64, 2} = reduce(vcat,transpose.(input.csv))
                 t = size(csv)
                 if t != (CSVL, 2)
-                    push!(errors, "csv length expected, ($(CSVL), 2), received $(t)")    
+                    push!(errors, "csv size error, expected $(rsize), received $(t)")       
                 else
                     input.csv = csv    
                 end

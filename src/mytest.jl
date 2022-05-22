@@ -71,6 +71,13 @@ function run()
         @test errors == ["radiation size error, expected (2, 3), received (1, 3)"]
     end;
 
+    @testset "validate user input radiation received other different an array" begin
+        errors = []    
+        radiation = JSON3.read("1")
+        validate_radiation!(radiation, errors, (2, 3))
+        @test errors == ["parsing error on radiation"]
+    end;
+
 end
 
 run()
