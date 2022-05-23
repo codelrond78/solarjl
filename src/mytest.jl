@@ -2,6 +2,8 @@ include("./user_input.jl")
 include("./radiation.jl")
 using Test
 using JSON3
+using Unitful
+
 using .radiation
 using .user
 
@@ -76,6 +78,10 @@ function run()
         radiation = JSON3.read("1")
         validate_radiation!(radiation, errors, (2, 3))
         @test errors == ["parsing error on radiation"]
+    end;
+
+    @testset "test units" begin
+        @test 1u"kg" == 1000u"g" 
     end;
 
 end
