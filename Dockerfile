@@ -4,6 +4,9 @@ ENV PORT "8080"
 
 RUN apt -y update
 RUN apt -y upgrade
-#RUN yes | apt install git
+
 RUN apt install -y git curl docker.io
+
+RUN git config --global user.name "codelrond"
+RUN git config --global user.email "codelrond@protonmail.com"
 
